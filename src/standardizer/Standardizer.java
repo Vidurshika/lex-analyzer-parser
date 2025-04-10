@@ -13,6 +13,7 @@ public class Standardizer {
 
     public static Node makeStandardizedTree(Node root) {
         // Recursively standardize each child first
+        System.out.println("Beginning of standardize Tree");
         for (Node child : root.getChildren()) {
             makeStandardizedTree(child);
         }
@@ -46,22 +47,51 @@ public class Standardizer {
             printTree(root);
         } else if (root.getValue().equals("function_form")) {
             System.out.println("Applying FUNCTION_FORM transformation");
+
+            int numChildren = root.getChildren().size(); // Store size before modifying the tree
+
+            // Remove and store the last child as expression E
             Node expression = root.getChildren().remove(root.getChildren().size() - 1);
 
             Node currentNode = root;
-            for (int i = 1; i < root.getChildren().size(); i++) {
+
+            if (numChildren == 3) {
+                System.out.println("Applying FUNCTION_FORM transformation for exactly 3 children");
+
+                // Remove and wrap the single variable in a lambda
                 Node lambdaNode = new Node("lambda");
-                Node child = root.getChildren().remove(1);
-                lambdaNode.addChild(child);
-                currentNode.addChild(lambdaNode);
-                currentNode = lambdaNode;
+                Node variable = root.getChildren().remove(1); // Second child is variable (V)
+                lambdaNode.addChild(variable);
+                lambdaNode.addChild(expression);
+
+                // Add lambda to root and set '='
+                root.addChild(lambdaNode);
+                root.setValue("=");
+            } else {
+                System.out.println("Applying FUNCTION_FORM transformation for more than 3 children");
+
+                // Handle multiple variables
+                while (root.getChildren().size() > 2) {
+                    Node lambdaNode = new Node("lambda");
+
+                    // Remove the second element (variable) and attach to lambda
+                    Node variable = root.getChildren().remove(1);
+                    lambdaNode.addChild(variable);
+
+                    // Attach lambda to currentNode
+                    currentNode.addChild(lambdaNode);
+                    currentNode = lambdaNode;
+                }
+
+                // Attach the final expression to the innermost lambda
+                currentNode.addChild(expression);
+                root.setValue("=");
             }
 
-            currentNode.addChild(expression);
-            root.setValue("=");
-
             printTree(root);
-        } else if (root.getValue().equals("gamma") && root.getChildren().size() > 2) {
+        }
+
+        else if (root.getValue().equals("gamma") && root.getChildren().size() > 2) {
             System.out.println("Applying MULTI-GAMMA transformation");
             Node expression = root.getChildren().remove(root.getChildren().size() - 1);
 

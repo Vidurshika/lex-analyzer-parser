@@ -56,6 +56,13 @@ public class Token {
         return isLastToken;
     }
 
+    public void setType(String newType) {
+        if (!this.type.equals(newType)) {
+            this.type = newType;
+        }
+    }
+
+
     // Override toString for debugging
     @Override
     public String toString() {
