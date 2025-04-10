@@ -1,0 +1,47 @@
+const int speakerPin = 10;
+const int toneFrequencies[8] = {300, 400, 500, 600, 700, 800, 900, 1000};
+
+void setup() {
+  Serial.begin(9600); // Initialize UART communication
+  pinMode(speakerPin, OUTPUT);
+}
+
+void loop() {
+  int totalTone = getCombinedTone();
+
+  if (totalTone > 0) {
+    playTone(totalTone);
+  } else {
+    stopTone();
+  }
+
+  delay(100); // Wait before the next loop iteration
+}
+
+// Function to read serial data and calculate combined tone frequency
+int getCombinedTone() {
+  int toneSum = 0;
+
+  while (Serial.available() > 0) {
+    char receivedChar = Serial.read();
+
+    if (receivedChar >= '1' && receivedChar <= '8') {
+      int index = receivedChar - '1'; // Convert char to index (0-7)
+      toneSum += toneFrequencies[index];
+    }
+
+    delay(10); // Allow time for multiple inputs
+  }
+
+  return toneSum;
+}
+
+// Function to play the tone
+void playTone(int frequency) {
+  tone(speakerPin, frequency);
+}
+
+// Function to stop the tone
+void stopTone() {
+  noTone(speakerPin);
+}
