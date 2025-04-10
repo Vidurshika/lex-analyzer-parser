@@ -2,6 +2,7 @@ package lexical;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class LexicalAnalyzer {
     private static final String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -9,7 +10,11 @@ public class LexicalAnalyzer {
     private static final String UNDERSCORE = "_";
     private static final String OPERATORS = "+-*<>&.@/:=~|$!#%^_[]{}\"?";
     private static final String PUNCTUATION = "();,";
-    private static final String KEYWORDS = "let|in|where|rec|fn|aug|or|not|gr|ge|ls|le|eq|ne|true|false|nil|dummy|within|and";
+    private static final Set<String> KEYWORDS = Set.of(
+            "let", "in", "where", "rec", "fn", "aug", "or", "not", "gr", "ge", "ls", "le",
+            "eq", "ne", "true", "false", "nil", "dummy", "within", "and"
+    );
+
 
     public static List<Token> tokenize(String input) {
         List<Token> tokens = new ArrayList<>();
