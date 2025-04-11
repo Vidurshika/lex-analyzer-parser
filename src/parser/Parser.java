@@ -75,7 +75,7 @@ public class Parser {
         } else {
             // Handle the case where the last token is reached
             if (!currentToken().getType().equals(")")) {
-//                currentToken().setType(")");
+                currentToken().setType(")");
             }
         }
     }
