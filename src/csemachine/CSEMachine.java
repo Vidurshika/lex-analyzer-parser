@@ -168,7 +168,7 @@ public class CSEMachine {
                     stack.push(stackSymbol1);
                     stack.push(temp);
                 } else if (stackSymbol1 instanceof String && builtInFunctions.contains(stackSymbol1)) {
-                    builtIn((String) stackSymbol1, stackSymbol2);
+                    builtIn((String) stackSymbol1, stackSymbol2,  control);
                 }
             } else if (symbol instanceof String && ((String) symbol).startsWith("e_")) {
                 Object stackSymbol = stack.pop();
@@ -355,7 +355,7 @@ public class CSEMachine {
     }
 
     // Built-in functions
-    private void builtIn(String function, Object argument) {
+    private void builtIn(String function, Object argument, List<Object> control) {
         System.out.println("Executing built-in function: " + function + " with argument: " + argument);
         switch (function) {
             case "Order":
@@ -367,8 +367,10 @@ public class CSEMachine {
                 stack.push(argument);
                 break;
             case "Conc":
+                System.out.println("Concccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
                 String str1 = (String) stack.pop();
-                stack.push(str1 + argument);
+                stack.push(argument+str1);
+                Object elsePart = control.remove(control.size() - 1);
                 break;
             case "Stern":
                 stack.push(((String) argument).substring(1));
