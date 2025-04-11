@@ -423,8 +423,27 @@ public class CSEMachine {
                 break;
             case "Print":
             case "print":
+                // Handle printing functionality
                 printPresent = true;
-                stack.push(argument);
+                if (argument instanceof String) {
+                    String argStr = (String) argument;
+
+                    // Replace escape sequences
+                    if (argStr.contains("\\n")) {
+                        argStr = argStr.replace("\\n", "\n");
+                    }
+                    if (argStr.contains("\\t")) {
+                        argStr = argStr.replace("\\t", "\t");
+                    }
+
+                    // Push the processed string onto the stack
+                    stack.push(argStr);
+                    System.out.println("Pushed processed string onto stack: " + argStr);
+                } else {
+                    // Push the argument as-is onto the stack
+                    stack.push(argument);
+                    System.out.println("Pushed argument onto stack: " + argument);
+                }
                 break;
             case "Conc":
                 System.out.println("Concccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
