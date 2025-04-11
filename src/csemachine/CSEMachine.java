@@ -190,6 +190,7 @@ public class CSEMachine {
                 Object rand1 = stack.pop();
                 System.out.println(rand1);
                 Object rand2 = stack.pop();
+                System.out.println(rand2);
                 System.out.println("Applying operator " + symbol + " on " + rand1 + " and " + rand2);
 
                 switch ((String) symbol) {
@@ -233,14 +234,28 @@ public class CSEMachine {
                         stack.push((boolean) rand1 && (boolean) rand2);
                         break;
                     case "aug":
-                        if (rand2 instanceof List) {
-                            List<Object> augmented = new ArrayList<>((List<?>) rand2);
-                            augmented.add(rand1);
-                            stack.push(augmented);
+                        System.out.println("Augmenting tuple");
+                        //System.out.println("TOP TWO OF STACK BEFORE AUG: " + stack.peek() + ", " + stack.get(stack.size()-2));
+                        System.out.println("rand1: " + rand1 + ", rand2: " + rand2);
+
+                        List<Object> newTuple = new ArrayList<>();
+
+                        if (rand1 instanceof List) {
+                            // rand1 is already a tuple → copy it
+                            newTuple.addAll((List<?>) rand1);
                         } else {
-                            stack.push(Arrays.asList(rand2, rand1));
+                            System.out.println("Elseeeeeeee");
+                            // wrap rand1 as a single-item tuple
+                            //newTuple.add(rand1);
                         }
+
+                        // always add rand2 at the end
+                        newTuple.add(rand2);
+
+                        stack.push(newTuple);
                         break;
+
+
                     default:
                         throw new IllegalStateException("Unexpected value: " + (String) symbol);
                 }
@@ -263,6 +278,7 @@ public class CSEMachine {
                 System.out.println("Beta operation with condition: " + condition);
 
                 if (condition) {
+                    System.out.println("Paka" + controlStructures.get(((Delta) thenPart).getNumber()));
                     control.addAll(controlStructures.get(((Delta) thenPart).getNumber()));
                 } else {
                     control.addAll(controlStructures.get(((Delta) elsePart).getNumber()));
@@ -318,39 +334,83 @@ public class CSEMachine {
         }
     }
 
-    // Lookup function for tokens
-    private Object lookup(String name) {
+    public Object lookup(String name) {
         System.out.println("Looking up name: " + name);
+
+        // Remove the enclosing angle brackets
         name = name.substring(1, name.length() - 1);
+        System.out.println("Processed name after removing angle brackets: " + name);
+
+        // Split the name into type and value
         String[] info = name.split(":");
+        String value;
 
         if (info.length == 1) {
-            return info[0];
+            // If no type is specified, treat the entire name as the value
+            value = info[0];
+            System.out.println("No data type specified. Value: " + value);
         } else {
+            // Extract the data type and value
             String dataType = info[0];
-            String value = info[1];
+            value = info[1];
+            System.out.println("Data type: " + dataType + ", Value: " + value);
 
+            // Handle different data types
             switch (dataType) {
                 case "INT":
+                    System.out.println("Returning integer value: " + value);
                     return Integer.parseInt(value);
+
                 case "STR":
-                    return value.replace("'", "");
+                    System.out.println("Returning string value: " + value);
+                    return value.strip().replace("'", "");
+
                 case "ID":
-                    System.out.println("Kariyoooooooooooooooooooooooooo");
-                    System.out.println(value);
+                    System.out.println("Identifier found: " + value);
+                    // Check if the value is a built-in function
                     if (builtInFunctions.contains(value)) {
+                        System.out.println("Identifier is a built-in function: " + value);
                         return value;
                     } else {
-                        Environment env = environments.get(currentEnvironment);
-                        if (env.getVariables().containsKey(value)) {
-                            return env.getVariables().get(value);
-                        } else {
-                            throw new RuntimeException("Undeclared Identifier: " + value);
+                        // Look up the value in the current environment
+                        try {
+                            Object variableValue = environments.get(currentEnvironment).getVariable(value);
+                            System.out.println("Identifier found in environment. Value: " + variableValue);
+                            return variableValue;
+                        } catch (Exception e) {
+                            System.out.println("Undeclared Identifier: " + value);
+                            System.exit(1);
                         }
                     }
+                    break;
+
                 default:
-                    throw new RuntimeException("Unknown data type: " + dataType);
+                    System.out.println("Unknown data type: " + dataType);
+                    System.exit(1);
             }
+        }
+
+        // Handle special cases for specific values
+        switch (value) {
+            case "Y*":
+                System.out.println("Returning special value: Y*");
+                return "Y*";
+
+            case "nil":
+                System.out.println("Returning special value: nil (empty tuple)");
+                return "[]"; // Representing an empty tuple
+
+            case "true":
+                System.out.println("Returning boolean value: true");
+                return true;
+
+            case "false":
+                System.out.println("Returning boolean value: false");
+                return false;
+
+            default:
+                System.out.println("Returning default value: " + value);
+                return value;
         }
     }
 
