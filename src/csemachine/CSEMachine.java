@@ -485,8 +485,25 @@ public class CSEMachine {
                 stack.push(argument instanceof String);
                 break;
             case "Istuple":
-                stack.push(argument instanceof List);
+                System.out.println("Istupleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                System.out.println(argument);
+
+                boolean isTuple = false;
+
+                if (argument instanceof List) {
+                    // If it's a Java List, treat it as a tuple
+                    isTuple = true;
+                } else if (argument instanceof String) {
+                    // If it's a string that looks like a bracketed list
+                    String str = ((String) argument).trim();
+                    if (str.matches("^\\[.*\\]$")) {
+                        isTuple = true;
+                    }
+                }
+
+                stack.push(isTuple);
                 break;
+
             case "Isfunction":
                 stack.push(builtInFunctions.contains(argument));
                 break;
