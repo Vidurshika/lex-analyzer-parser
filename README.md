@@ -140,27 +140,28 @@ java myrpal ../Tests/file_name.txt
 ---
 
 ## 🔍 Java Files & Their Responsibilities
-### 🔹 `myrpal.java`
-Main entry point. Handles CLI arguments and coordinates execution.
 
-### 🔹 Lexical Analyzer
-- `LexicalAnalyzer.java` - Tokenizes the input stream.
-- `Token.java` - Represents tokens.
+### 🔤 Lexical Analysis (📂 lexical)
+- **LexicalAnalyzer.java**: Scans the RPAL source file and splits it into tokens.
+- **Token.java**: Represents individual tokens with type and value.
 
-### 🔹 Parser
-- `Parser.java` - Builds the AST.
-- `Node.java` - Represents a node in the AST.
+### 🧱 Parsing (📂 parser)
+- **Parser.java**: Builds an AST based on tokens from the lexical analyzer.
+- **Node.java**: Represents a node in the AST.
 
-### 🔹 Standardizer
-- `Standardizer.java` - Converts AST to Standardized Tree (ST).
+### 🛠️ Standardizing (📂 standardizer)
+- **Standardizer.java**: Converts AST into a Standardized Tree (ST) following specific transformation rules.
 
-### 🔹 CSE Machine
-- `CSEMachine.java` - Evaluates the ST using stack-based machine architecture.
-- `Environment.java` - Manages variable environments.
+### ⚙️ CSE Execution (📂 csemachine)
+- **CSEMachine.java**: Executes the standardized tree using the Control Stack Environment (CSE) machine model.
+- **Environment.java**: Manages variable scopes and values during CSE execution.
 
-### 🔹 Structures
-Used in evaluation:
-- `Lambda.java`, `Delta.java`, `Eta.java`, `Tau.java` - Represent functional components in ST evaluation.
+### 📐 Structures (📂 structures)
+- **Delta.java, Eta.java, Lambda.java, Tau.java**: Define internal representations for different types of tree nodes used during standardization and execution.
+
+### 🧾 Main Class
+- **myrpal.java**: Entry point of the program. Coordinates lexical analysis, parsing, standardization, and evaluation.
+
 
 ---
 
