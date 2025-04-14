@@ -12,8 +12,6 @@ Welcome to the **RPAL Analyzer Project**! This README will walk you through the 
 4. [📄 Java Files Explained](#-java-files-explained)
 5. [⚙️ How to Run the Project](#-how-to-run-the-project)
 6. [🧪 Sample Input/Output](#-sample-inputoutput)
-7. [📬 Submission Guidelines](#-submission-guidelines)
-8. [📝 Grading Policy](#-grading-policy)
 
 ---
 
