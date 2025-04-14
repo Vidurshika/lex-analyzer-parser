@@ -123,21 +123,35 @@ javac myrpal.java lexical/*.java parser/*.java standardizer/*.java csemachine/*.
 ### ▶️ Running the Program
 
 #### If test files are in the `src` folder:
+
+✅ To execute a program:
 ```bash
-java myrpal testfile1
-java myrpal -ast testfile1
-java myrpal -st testfile1
-java myrpal -l testfile1
+java myrpal file_name
+```
+
+🌲 To print Abstract Syntax Tree (AST):
+```bash
+java myrpal -ast file_name
+```
+
+🪵 To print Standardized Tree (ST):
+```bash
+java myrpal -st file_name
+```
+
+📄 To print file content:
+```bash
+java myrpal -l file_name
 ```
 
 #### If test files are outside `src`:
 ```bash
-java myrpal -l ../Tests/file_name
+java myrpal ../Tests/file_name
 ```
 
 #### If file has an extension (e.g., `.txt`):
 ```bash
-java myrpal -l ../Tests/file_name.txt
+java myrpal ../Tests/file_name.txt
 ```
 
 ---
