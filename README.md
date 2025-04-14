@@ -89,7 +89,7 @@ lex-analyzer-parser/
 
 1. **Clone the Repository**
 ```bash
-git clone https://github.com/Vidurshika/lex-analyzer-parser.git
+https://github.com/Sithum-Bimsara/lex-analyzer-parser.git
 ```
 2. **Open in IntelliJ IDEA or another Java IDE**
 
