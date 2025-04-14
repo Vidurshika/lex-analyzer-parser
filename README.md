@@ -10,10 +10,8 @@ Welcome to the **RPAL Analyzer Project**! This README will walk you through the 
 2. [🔍 Lexical Analyzer & Parser](#-lexical-analyzer--parser)
 3. [📂 Project Structure](#-project-structure)
 4. [📄 Java Files Explained](#-java-files-explained)
-5. [⚙️ How to Run the Project](#-how-to-run-the-project)
+5. [⚙️ How to Run the Project](#how-to-run-the-project)
 6. [🧪 Sample Input/Output](#-sample-inputoutput)
-7. [📬 Submission Guidelines](#-submission-guidelines)
-8. [📝 Grading Policy](#-grading-policy)
 
 ---
 
@@ -101,7 +99,9 @@ lex-analyzer-parser
 
 ---
 
+
 ## ⚙️ How to Run the Project
+
 
 ### 🔧 Step-by-Step
 
@@ -119,6 +119,7 @@ cd lex-analyzer-parser/src
 ```bash
 javac myrpal.java lexical/*.java parser/*.java standardizer/*.java csemachine/*.java
 ```
+
 
 ### ▶️ Running the Program
 
