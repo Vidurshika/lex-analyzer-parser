@@ -85,30 +85,57 @@ lex-analyzer-parser/
 ---
 
 ## 🧪 How to Run
-### 🔧 Compile the code:
-From the `src` directory:
+### 🔧 Step-by-Step
+
+1. **Clone the Repository**
+```bash
+git clone https://github.com/Vidurshika/lex-analyzer-parser.git
+```
+2. **Open in IntelliJ IDEA or another Java IDE**
+
+3. **Navigate to the src directory**
+```bash
+cd lex-analyzer-parser/src
+```
+4. **Compile the Program**
 ```bash
 javac myrpal.java lexical/*.java parser/*.java standardizer/*.java csemachine/*.java
 ```
 
-### ▶️ Run the program:
-If the file is inside `src/Tests`:
+### ▶️ Running the Program
+
+#### If test files are in the `src` folder:
+
+✅ To execute a program:
 ```bash
-java myrpal Tests/file_name
-java myrpal -ast Tests/file_name
-java myrpal -st Tests/file_name
-java myrpal -l Tests/file_name
+java myrpal file_name
 ```
 
-If the file is one directory outside `src`:
+🌲 To print Abstract Syntax Tree (AST):
+```bash
+java myrpal -ast file_name
+```
+
+🪵 To print Standardized Tree (ST):
+```bash
+java myrpal -st file_name
+```
+
+📄 To print file content:
+```bash
+java myrpal -l file_name
+```
+
+#### If test files are outside `src`:
 ```bash
 java myrpal ../Tests/file_name
 ```
 
-If the file has `.txt` extension:
+#### If file has an extension (e.g., `.txt`):
 ```bash
-java myrpal -l ../Tests/file_name.txt
+java myrpal ../Tests/file_name.txt
 ```
+
 
 ---
 
