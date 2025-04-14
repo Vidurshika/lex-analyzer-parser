@@ -419,8 +419,26 @@ public class CSEMachine {
         System.out.println("Executing built-in function: " + function + " with argument: " + argument);
         switch (function) {
             case "Order":
-                stack.push(((List<?>) argument).size());
+                System.out.println("Orderrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+                System.out.println("Argument: " + argument);
+
+                if (argument instanceof List<?>) {
+                    System.out.println("In the list");
+                    int size = ((List<?>) argument).size();
+                    System.out.println("Order: " + size);
+                    stack.push(size);
+                } else if (argument instanceof String) {
+                    System.out.println("In the String");
+                    int length = ((String) argument).length();
+                    int reSizedLength = length - 2;
+                    System.out.println("Order: " + reSizedLength);
+                    stack.push(reSizedLength);
+                } else {
+                    throw new IllegalArgumentException("Order function expects a List or String argument, got: " + argument.getClass());
+                }
                 break;
+
+
             case "Print":
             case "print":
                 // Handle printing functionality
