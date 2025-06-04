@@ -102,6 +102,34 @@ cd lex-analyzer-parser/src
 javac myrpal.java scanner/*.java parser/*.java standardizer/*.java csemachine/*.java
 ```
 
+or you can use the makefile in here to complie the program.
+
+### 🔧 Step-by-Step
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/Vidurshika/lex-analyzer-parser.git
+   ```
+
+2. **Navigate to the `src` directory**
+
+   ```bash
+   cd lex-analyzer-parser/src
+   ```
+
+3. **Compile the Program using `make`**
+
+   ```bash
+   make
+   ```
+
+4. **Clean compiled class files (optional)**
+
+   ```bash
+   make clean
+   ```
+
 ### ▶️ Running the Program
 
 #### If test files are in the `src` folder:
