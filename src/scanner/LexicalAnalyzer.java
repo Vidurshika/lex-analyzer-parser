@@ -1,4 +1,4 @@
-package lexical;
+package scanner;
 
 import java.util.ArrayList;
 import java.util.List;

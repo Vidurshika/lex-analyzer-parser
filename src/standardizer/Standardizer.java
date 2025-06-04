@@ -13,14 +13,13 @@ public class Standardizer {
 
     public static Node makeStandardizedTree(Node root) {
         // Recursively standardize each child first
-        System.out.println("Beginning of standardize Tree");
         for (Node child : root.getChildren()) {
             makeStandardizedTree(child);
         }
 
         // Apply transformations with debug print statements
         if (root.getValue().equals("let") && root.getChildren().get(0).getValue().equals("=")) {
-            System.out.println("Applying LET transformation");
+
             Node child0 = root.getChildren().get(0);
             Node child1 = root.getChildren().get(1);
 
@@ -29,9 +28,8 @@ public class Standardizer {
             child0.setValue("lambda");
             root.setValue("gamma");
 
-            printTree(root);
         } else if (root.getValue().equals("where") && root.getChildren().get(1).getValue().equals("=")) {
-            System.out.println("Applying WHERE transformation");
+
             Node child0 = root.getChildren().get(0);
             Node child1 = root.getChildren().get(1);
 
@@ -44,9 +42,7 @@ public class Standardizer {
             root.getChildren().set(1, temp);   // E
             root.setValue("gamma");
 
-            printTree(root);
         } else if (root.getValue().equals("function_form")) {
-            System.out.println("Applying FUNCTION_FORM transformation");
 
             int numChildren = root.getChildren().size(); // Store size before modifying the tree
 
@@ -56,7 +52,6 @@ public class Standardizer {
             Node currentNode = root;
 
             if (numChildren == 3) {
-                System.out.println("Applying FUNCTION_FORM transformation for exactly 3 children");
 
                 // Remove and wrap the single variable in a lambda
                 Node lambdaNode = new Node("lambda");
@@ -68,7 +63,6 @@ public class Standardizer {
                 root.addChild(lambdaNode);
                 root.setValue("=");
             } else {
-                System.out.println("Applying FUNCTION_FORM transformation for more than 3 children");
 
                 // Handle multiple variables
                 while (root.getChildren().size() > 2) {
@@ -88,11 +82,9 @@ public class Standardizer {
                 root.setValue("=");
             }
 
-            printTree(root);
         }
 
         else if (root.getValue().equals("gamma") && root.getChildren().size() > 2) {
-            System.out.println("Applying MULTI-GAMMA transformation");
             Node expression = root.getChildren().remove(root.getChildren().size() - 1);
 
             Node currentNode = root;
@@ -106,11 +98,10 @@ public class Standardizer {
 
             currentNode.addChild(expression);
 
-            printTree(root);
         } else if (root.getValue().equals("within") &&
                 root.getChildren().get(0).getValue().equals("=") &&
                 root.getChildren().get(1).getValue().equals("=")) {
-            System.out.println("Applying WITHIN transformation");
+
 
             Node child0 = root.getChildren().get(1).getChildren().get(0);
             Node gammaNode = new Node("gamma");
@@ -126,10 +117,7 @@ public class Standardizer {
             root.getChildren().set(1, gammaNode);
             root.setValue("=");
 
-            printTree(root);
         } else if (root.getValue().equals("@")) {
-            System.out.println("Applying AT transformation");
-
             Node expression = root.getChildren().remove(0);
             Node identifier = root.getChildren().get(0);
 
@@ -140,9 +128,7 @@ public class Standardizer {
             root.getChildren().set(0, gammaNode);
             root.setValue("gamma");
 
-            printTree(root);
         } else if (root.getValue().equals("and")) {
-            System.out.println("Applying AND transformation");
 
             Node commaNode = new Node(",");
             Node tauNode = new Node("tau");
@@ -157,9 +143,7 @@ public class Standardizer {
             root.addChild(tauNode);
             root.setValue("=");
 
-            printTree(root);
         } else if (root.getValue().equals("rec")) {
-            System.out.println("Applying REC transformation");
 
             Node temp = root.getChildren().remove(0);
             temp.setValue("lambda");
@@ -172,7 +156,6 @@ public class Standardizer {
             root.addChild(gammaNode);
             root.setValue("=");
 
-            printTree(root);
         }
 
         return root;

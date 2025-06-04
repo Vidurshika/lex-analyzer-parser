@@ -1,4 +1,4 @@
-package lexical;
+package scanner;
 
 public class Token {
     private String content;

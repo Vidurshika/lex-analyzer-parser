@@ -13,6 +13,7 @@ public class CSEMachine {
     private int currentEnvironment = 0;
     private int count = 0;
     private boolean printPresent = false;
+    String finalResult = "";
 
     private static final List<String> builtInFunctions = Arrays.asList(
             "Order", "Print", "print", "Conc", "Stern", "Stem", "Isinteger", "Istruthvalue",
@@ -25,7 +26,7 @@ public class CSEMachine {
 
     // Main method to execute the CSE Machine
     public void execute(Node root) {
-        System.out.println("Starting CSE Machine Execution...");
+
         generateControlStructure(root, 0);
 
         List<Object> control = new ArrayList<>();
@@ -33,27 +34,22 @@ public class CSEMachine {
         control.addAll(controlStructures.get(0));
         stack.push(environments.get(0).getName());
 
-        System.out.println("Initial Control Stack: " + control);
-        System.out.println("Initial Execution Stack: " + stack);
 
         applyRules(control);
 
         if (printPresent) {
-            System.out.println("Final Result: " + stack.peek());
+            System.out.println(finalResult);
         }
     }
 
     // Generate control structures recursively
     private void generateControlStructure(Node root, int i) {
-        System.out.println("Generating control structure for root: " + root.getValue() + ", index: " + i);
 
         while (controlStructures.size() <= i) {
-            System.out.println("Extending controlStructures to index " + i);
             controlStructures.add(new ArrayList<>());
         }
 
         if (root.getValue().equals("lambda")) {
-            System.out.println("Processing lambda node: " + root.getValue());
             count++;
             Node leftChild = root.getChildren().get(0);
             Lambda lambda = new Lambda(count);
@@ -64,10 +60,8 @@ public class CSEMachine {
                     boundedVariables.append(child.getValue().substring(4, child.getValue().length() - 1)).append(",");
                 }
                 lambda.setBoundedVariable(boundedVariables.substring(0, boundedVariables.length() - 1));
-                System.out.println("Lambda bounded variables: " + lambda.getBoundedVariable());
             } else {
                 lambda.setBoundedVariable(leftChild.getValue().substring(4, leftChild.getValue().length() - 1));
-                System.out.println("Lambda bounded variable: " + lambda.getBoundedVariable());
             }
 
             controlStructures.get(i).add(lambda);
@@ -76,7 +70,6 @@ public class CSEMachine {
                 generateControlStructure(root.getChildren().get(j), count);
             }
         } else if (root.getValue().equals("->")) {
-            System.out.println("Processing conditional node: " + root.getValue());
             count++;
             Delta delta1 = new Delta(count);
             controlStructures.get(i).add(delta1);
@@ -90,14 +83,12 @@ public class CSEMachine {
             controlStructures.get(i).add("beta");
             generateControlStructure(root.getChildren().get(0), i);
         } else if (root.getValue().equals("tau")) {
-            System.out.println("Processing tau node: " + root.getValue());
             Tau tau = new Tau(root.getChildren().size());
             controlStructures.get(i).add(tau);
             for (Node child : root.getChildren()) {
                 generateControlStructure(child, i);
             }
         } else {
-            System.out.println("Processing default node: " + root.getValue());
             controlStructures.get(i).add(root.getValue());
             for (Node child : root.getChildren()) {
                 generateControlStructure(child, i);
@@ -106,15 +97,11 @@ public class CSEMachine {
     }
 
     private void applyRules(List<Object> control) {
-        List<String> op = Arrays.asList("+", "-", "*", "/", "**", "gr", "ge", "ls", "le", "eq", "ne", "or", "&", "aug");
+        List<String> op = Arrays.asList("+", "-", "", "/", "*", "gr", "ge", "ls", "le", "eq", "ne", "or", "&", "aug");
         List<String> uop = Arrays.asList("neg", "not");
 
         while (!control.isEmpty()) {
-            System.out.println("Control Stack: " + control);
-            System.out.println("Execution Stack: " + stack);
-
             Object symbol = control.remove(control.size() - 1);
-            System.out.println("Processing symbol: " + symbol);
 
             if (symbol instanceof String && ((String) symbol).startsWith("<") && ((String) symbol).endsWith(">")) {
                 stack.push(lookup((String) symbol));
@@ -127,7 +114,6 @@ public class CSEMachine {
             } else if ("gamma".equals(symbol)) {
                 Object stackSymbol1 = stack.pop();
                 Object stackSymbol2 = stack.pop();
-                System.out.println("Gamma operation with: " + stackSymbol1 + ", " + stackSymbol2);
 
                 if (stackSymbol1 instanceof Lambda) {
                     Lambda lambda = (Lambda) stackSymbol1;
@@ -185,13 +171,9 @@ public class CSEMachine {
                 }
                 stack.push(stackSymbol);
             } else if (op.contains(symbol)) {
-                System.out.println("huttooooooooooooooooooooooooooooo");
-                System.out.println(stack);
+
                 Object rand1 = stack.pop();
-                System.out.println(rand1);
                 Object rand2 = stack.pop();
-                System.out.println(rand2);
-                System.out.println("Applying operator " + symbol + " on " + rand1 + " and " + rand2);
 
                 switch ((String) symbol) {
                     case "+":
@@ -206,7 +188,7 @@ public class CSEMachine {
                     case "/":
                         stack.push((int) rand1 / (int) rand2);
                         break;
-                    case "**":
+                    case "":
                         stack.push((int) Math.pow((int) rand1, (int) rand2));
                         break;
                     case "gr":
@@ -234,9 +216,6 @@ public class CSEMachine {
                         stack.push((boolean) rand1 && (boolean) rand2);
                         break;
                     case "aug":
-                        System.out.println("Augmenting tuple");
-                        //System.out.println("TOP TWO OF STACK BEFORE AUG: " + stack.peek() + ", " + stack.get(stack.size()-2));
-                        System.out.println("rand1: " + rand1 + ", rand2: " + rand2);
 
                         List<Object> newTuple = new ArrayList<>();
 
@@ -244,9 +223,6 @@ public class CSEMachine {
                             // rand1 is already a tuple → copy it
                             newTuple.addAll((List<?>) rand1);
                         } else {
-                            System.out.println("Elseeeeeeee");
-                            // wrap rand1 as a single-item tuple
-                            //newTuple.add(rand1);
                         }
 
                         // always add rand2 at the end
@@ -261,7 +237,6 @@ public class CSEMachine {
                 }
             } else if (uop.contains(symbol)) {
                 Object rand = stack.pop();
-                System.out.println("Applying unary operator " + symbol + " on " + rand);
 
                 switch ((String) symbol) {
                     case "not":
@@ -275,10 +250,8 @@ public class CSEMachine {
                 boolean condition = (boolean) stack.pop();
                 Object elsePart = control.remove(control.size() - 1);
                 Object thenPart = control.remove(control.size() - 1);
-                System.out.println("Beta operation with condition: " + condition);
 
                 if (condition) {
-                    System.out.println("Paka" + controlStructures.get(((Delta) thenPart).getNumber()));
                     control.addAll(controlStructures.get(((Delta) thenPart).getNumber()));
                 } else {
                     control.addAll(controlStructures.get(((Delta) elsePart).getNumber()));
@@ -287,22 +260,15 @@ public class CSEMachine {
                 Tau tau = (Tau) symbol;
                 int n = tau.getNumber();
                 List<Object> tauList = new ArrayList<>();
-                System.out.println("Processing Tau with number: " + n);
 
                 for (int i = 0; i < n; i++) {
                     Object value = stack.pop();
-                    System.out.println("Popped value from stack: " + value);
                     tauList.add(value);
                 }
 
-                //Collections.reverse(tauList); // Reverse the list to maintain the correct order
-                //System.out.println("Reversed list for tuple: " + tauList);
 
                 List<Object> tauTuple = new ArrayList<>(tauList); // Representing tuple as a list in Java
-                System.out.println("Created tuple: " + tauTuple);
-
                 stack.push(tauTuple);
-                System.out.println("Pushed tuple onto stack: " + tauTuple);
 
             } else if ("Y*".equals(symbol)) {
                 stack.push(symbol);
@@ -335,11 +301,9 @@ public class CSEMachine {
     }
 
     public Object lookup(String name) {
-        System.out.println("Looking up name: " + name);
 
         // Remove the enclosing angle brackets
         name = name.substring(1, name.length() - 1);
-        System.out.println("Processed name after removing angle brackets: " + name);
 
         // Split the name into type and value
         String[] info = name.split(":");
@@ -348,44 +312,35 @@ public class CSEMachine {
         if (info.length == 1) {
             // If no type is specified, treat the entire name as the value
             value = info[0];
-            System.out.println("No data type specified. Value: " + value);
         } else {
             // Extract the data type and value
             String dataType = info[0];
             value = info[1];
-            System.out.println("Data type: " + dataType + ", Value: " + value);
 
             // Handle different data types
             switch (dataType) {
                 case "INT":
-                    System.out.println("Returning integer value: " + value);
                     return Integer.parseInt(value);
 
                 case "STR":
-                    System.out.println("Returning string value: " + value);
                     return value.strip().replace("'", "");
 
                 case "ID":
-                    System.out.println("Identifier found: " + value);
                     // Check if the value is a built-in function
                     if (builtInFunctions.contains(value)) {
-                        System.out.println("Identifier is a built-in function: " + value);
                         return value;
                     } else {
                         // Look up the value in the current environment
                         try {
                             Object variableValue = environments.get(currentEnvironment).getVariable(value);
-                            System.out.println("Identifier found in environment. Value: " + variableValue);
                             return variableValue;
                         } catch (Exception e) {
-                            System.out.println("Undeclared Identifier: " + value);
                             System.exit(1);
                         }
                     }
                     break;
 
                 default:
-                    System.out.println("Unknown data type: " + dataType);
                     System.exit(1);
             }
         }
@@ -393,45 +348,33 @@ public class CSEMachine {
         // Handle special cases for specific values
         switch (value) {
             case "Y*":
-                System.out.println("Returning special value: Y*");
                 return "Y*";
 
             case "nil":
-                System.out.println("Returning special value: nil (empty tuple)");
                 return "[]"; // Representing an empty tuple
 
             case "true":
-                System.out.println("Returning boolean value: true");
                 return true;
 
             case "false":
-                System.out.println("Returning boolean value: false");
                 return false;
 
             default:
-                System.out.println("Returning default value: " + value);
                 return value;
         }
     }
 
     // Built-in functions
     private void builtIn(String function, Object argument, List<Object> control) {
-        System.out.println("Executing built-in function: " + function + " with argument: " + argument);
         switch (function) {
             case "Order":
-                System.out.println("Orderrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-                System.out.println("Argument: " + argument);
 
                 if (argument instanceof List<?>) {
-                    System.out.println("In the list");
                     int size = ((List<?>) argument).size();
-                    System.out.println("Order: " + size);
                     stack.push(size);
                 } else if (argument instanceof String) {
-                    System.out.println("In the String");
                     int length = ((String) argument).length();
                     int reSizedLength = length - 2;
-                    System.out.println("Order: " + reSizedLength);
                     stack.push(reSizedLength);
                 } else {
                     throw new IllegalArgumentException("Order function expects a List or String argument, got: " + argument.getClass());
@@ -456,15 +399,14 @@ public class CSEMachine {
 
                     // Push the processed string onto the stack
                     stack.push(argStr);
-                    System.out.println("Pushed processed string onto stack: " + argStr);
+                    finalResult = finalResult + argStr;
                 } else {
                     // Push the argument as-is onto the stack
                     stack.push(argument);
-                    System.out.println("Pushed argument onto stack: " + argument);
+                    finalResult = finalResult + argument;
                 }
                 break;
             case "Conc":
-                System.out.println("Concccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
                 String str1 = (String) stack.pop();
                 stack.push(argument+str1);
                 Object elsePart = control.remove(control.size() - 1);
@@ -485,8 +427,6 @@ public class CSEMachine {
                 stack.push(argument instanceof String);
                 break;
             case "Istuple":
-                System.out.println("Istupleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                System.out.println(argument);
 
                 boolean isTuple = false;
 
