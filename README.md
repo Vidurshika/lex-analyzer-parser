@@ -99,7 +99,7 @@ cd lex-analyzer-parser/src
 ```
 4. **Compile the Program**
 ```bash
-javac myrpal.java lexical/*.java parser/*.java standardizer/*.java csemachine/*.java
+javac myrpal.java scanner/*.java parser/*.java standardizer/*.java csemachine/*.java
 ```
 
 ### ▶️ Running the Program
